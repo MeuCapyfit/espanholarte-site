@@ -320,6 +320,7 @@ ul,ol{padding:0;list-style:none}
 .ft .btn--line:hover{background:var(--yellow);border-color:var(--yellow);color:var(--ink)}
 .ft__copy{margin-top:3rem;padding-top:1.4rem;border-top:1px solid rgba(255,249,238,.2);font-size:.85rem;opacity:.7}
 .ft__credit{margin-top:.3rem;font-size:.8rem}
+.ft__credit .ext{width:.75em;height:.75em;margin-left:.35em;flex:none}
 .ft__credit a{display:inline-flex;align-items:center;min-height:44px;color:rgba(255,249,238,.72);text-decoration:none;border-bottom:1px solid transparent;transition:color .25s,border-color .25s}
 .ft__credit a:hover,.ft__credit a:focus-visible{color:var(--yellow);border-color:currentColor}
 .ft__credit a:focus-visible{outline-color:var(--paper)}
