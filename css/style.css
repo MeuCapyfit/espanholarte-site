@@ -199,6 +199,8 @@ ul,ol{padding:0;list-style:none}
 .path__more i{display:block;width:10px;height:10px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .3s var(--ease)}
 .path__more[aria-expanded=true] i{transform:rotate(-135deg)}
 .path__details{margin-top:1rem;display:grid;gap:.5rem}
+.path__details[hidden]{display:none}
+.path__details:not([hidden]){animation:fadeUp .4s var(--ease)}
 .path__details ul{display:grid;gap:.5rem}
 .path__sched{font-size:.9rem;font-weight:700;padding:.5rem .9rem;border-radius:10px;background:var(--ink);color:var(--paper);width:fit-content}
 .path__buy{display:grid;gap:1rem;align-content:start}
@@ -222,6 +224,14 @@ ul,ol{padding:0;list-style:none}
   .path__inner{grid-template-columns:minmax(0,1.1fr) minmax(0,1.15fr) minmax(0,.8fr);gap:3rem;padding:56px 0 60px}
   .path__buy{grid-column:auto}
 }
+/* Touch: o plano que ocupa o centro da viewport ganha a cor (classe .is-active via IntersectionObserver) */
+.path.is-active{color:var(--fgh)}
+.path.is-active .path__fill{transform:scaleY(1)}
+.path.is-active .path__no{background:var(--paper);border-color:var(--ink);color:var(--ink)}
+.path--red.is-active .btn--solid,.path--ink.is-active .btn--solid{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+.path--red.is-active .path__facts li::before,.path--red.is-active .path__details li::before,.path--ink.is-active .path__facts li::before,.path--ink.is-active .path__details li::before{border-color:var(--yellow)}
+.path--orange.is-active :is(.path__name,.price dt,.price small,.price__note),.path--red.is-active :is(.path__name,.price dt,.price small,.price__note){opacity:1}
+.path--red.is-active .path__more:focus-visible,.path--ink.is-active .path__more:focus-visible{outline-color:var(--paper)}
 @media(hover:hover) and (pointer:fine){
   .path:hover,.path:focus-within{color:var(--fgh)}
   .path:hover .path__fill,.path:focus-within .path__fill{transform:scaleY(1)}
@@ -320,3 +330,5 @@ ul,ol{padding:0;list-style:none}
   .js .rv{opacity:1;transform:none}
   .js .hero__title .ln>span{transform:none}
 }
+/* contraste: check decorativo em tinta sobre o laranja ativo (touch) */
+.path--orange.is-active .path__facts li::before,.path--orange.is-active .path__details li::before{border-color:var(--ink)}

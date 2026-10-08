@@ -60,6 +60,23 @@ $$('.path__more').forEach(b => b.addEventListener('click', () => {
   b.setAttribute('aria-expanded', String(open)); d.hidden = !open; $('span', b).textContent = open ? 'Menos detalhes' : 'Mais detalhes';
 }));
 
+/* ---------- modalidades (touch): o plano no centro da viewport vira o protagonista ---------- */
+const cards = $$('.path');
+if (cards.length && 'IntersectionObserver' in window && matchMedia('(hover: none)').matches) {
+  const seen = new Map(); let on = null;
+  const pick = () => {
+    let best = null, h = 0;
+    seen.forEach((v, el) => { if (v > h) { h = v; best = el; } });
+    if (best !== on) { on?.classList.remove('is-active'); best?.classList.add('is-active'); on = best; }
+  };
+  /* faixa fina no centro da tela: só um plano a cruza por vez, sem alternar perto do limite */
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => e.isIntersecting ? seen.set(e.target, e.intersectionRect.height) : seen.delete(e.target));
+    pick();
+  }, { rootMargin: '-46% 0px -46% 0px', threshold: Array.from({ length: 21 }, (_, i) => i / 20) });
+  cards.forEach(c => io.observe(c));
+}
+
 /* ---------- manifesto: cena fixa dirigida pelo progresso do scroll ---------- */
 const mf = $('.mf');
 if (mf && !reduce) {
