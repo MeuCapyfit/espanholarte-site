@@ -244,6 +244,7 @@ const html = `<!doctype html>
       </div>
     </div>
     <p class="ft__copy">© <span data-year>2026</span> Espanholarte. Todos os direitos reservados.</p>
+    <p class="ft__credit"><a href="https://www.forjaapps.com.br" target="_blank" rel="noopener noreferrer">Desenvolvido pela Forja Apps <span aria-hidden="true">↗</span><span class="sr-only">(abre em nova aba)</span></a></p>
   </div>
 </footer>
 
