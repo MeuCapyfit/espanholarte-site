@@ -14,14 +14,27 @@ export const CONFIG = {
      Deixe vazio ('') o que ainda não foi fornecido. Os botões continuam na página e mostram um aviso
      "link em configuração" ao serem clicados. Nada aqui é inventado. */
   links: {
-    /* WhatsApp: somente dígitos com DDI+DDD, ex.: '5511999999999'.  PENDENTE: número final da Bettiana. */
+    /* WhatsApp: link de atendimento informado pela cliente (ChatWith). Tem prioridade sobre o número abaixo
+       e é usado como está, sem mensagem pré-preenchida. Número só para conferência: +55 22 99808-6723. */
+    whatsappUrl: 'https://chatwith.io/s/espanholarte',
+    /* Alternativa: somente dígitos com DDI+DDD (só é usada se whatsappUrl estiver vazio). */
     whatsappNumber: '',
     /* Instagram: handle visível nos materiais da cliente (@espanholarte). Confirmar o perfil final. */
     instagram: 'https://www.instagram.com/espanholarte/',
-    /* Checkout do Espanhol para Viagens (Hotmart). PENDENTE: confirmar o link final do produto. */
-    hotmartViagens: '',
+    /* Checkout do Espanhol para Viagens (Hotmart), link oficial fornecido pela cliente. */
+    hotmartViagens: 'https://pay.hotmart.com/W92026469P?bid=1792007484203',
     /* Pré-inscrições (Google Forms atuais). Opcional: se preenchidos, aparecem em "Como começar". */
     forms: { particulares: '', a1: '', conversacao: '' }
+  },
+
+  /* ---------- APRESENTAÇÃO DA FUNDADORA (texto aprovado pela cliente) ---------- */
+  about: {
+    bio: [
+      "Bettiana Navarro é professora nativa de espanhol, uruguaia e apaixonada pela arte, pela cultura e pela educação. Com mais de 15 anos de experiência na área, fundou a ESPANHOLARTE, um projeto que nasceu do desejo de tornar o aprendizado do espanhol mais leve, prático e significativo.",
+      "Sua metodologia combina conhecimento, criatividade e vivências culturais para que cada aluno aprenda a se comunicar com confiança e naturalidade, indo muito além da gramática e do vocabulário.",
+      "Para Bettiana, aprender um idioma é abrir portas, criar conexões e descobrir novas formas de enxergar o mundo.",
+      "Na ESPANHOLARTE, você aprende espanhol de verdade, vivencia a cultura e se conecta com novas possibilidades. Porque aprender uma língua é muito mais do que falar outro idioma: é ampliar horizontes e aproximar pessoas."
+    ]
   },
 
   whatsappGreeting: 'Olá, Bettiana! Vim pelo site da Espanholarte.',
@@ -154,6 +167,7 @@ export const CONFIG = {
 
 /* ---------- helpers compartilhados (navegador + render) ---------- */
 export function whatsappHref(cfg, message) {
+  if (cfg.links.whatsappUrl) return cfg.links.whatsappUrl;
   const n = (cfg.links.whatsappNumber || '').replace(/\D/g, '');
   if (!n) return '';
   return `https://wa.me/${n}?text=${encodeURIComponent(message || cfg.whatsappGreeting)}`;

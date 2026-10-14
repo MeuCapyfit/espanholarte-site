@@ -188,8 +188,9 @@ const html = `<!doctype html>
       <div class="about__copy">
         <p class="kicker rv"><span>04</span><i></i><span>Quem ensina</span></p>
         <h2 class="display rv" id="aT">Bettiana <em>Navarro</em></h2>
-        <p class="about__role rv">Professora nativa do Uruguai e o rosto da Espanholarte.</p>
-        <p class="lead rv">Ela ajuda brasileiros do mundo todo a se comunicar com confiança em espanhol, com aulas práticas e dinâmicas.</p>
+        <div class="about__bio">
+${C.about.bio.map(t => `          <p class="rv">${esc(t)}</p>`).join('\n')}
+        </div>
         <p class="rv"><a class="btn btn--line" href="${esc(C.links.instagram)}" target="_blank" rel="noopener" data-ig>${IG_ICON}<span>@${esc(C.brand.instagramHandle)} no Instagram</span></a></p>
       </div>
     </div>
