@@ -1,28 +1,44 @@
 #!/usr/bin/env python3
-"""Limpa a borda esfumaçada (pixels semitransparentes que deixavam o fundo amarelo aparecer) no canto do colete,
-embaixo do braço, na foto 'maos' (Hablar). Mexe só numa caixa pequena; o resto da imagem não muda.
+"""Devolve o pedaço do colete que o recorte apagou embaixo do braço (foto 'maos', Hablar) e que deixava um
+"entalhe" amarelo. A foto original ainda guarda, por baixo da transparência, a cor real do tecido; usamos essa
+cor onde ela é claramente de colete (clara e pouco saturada) e deixamos o resto transparente.
+Mexe só numa caixa pequena. Precisa da versão ORIGINAL das imagens (commit 934755f).
 Uso: python3 scripts/fix-maos-colete.py"""
-import numpy as np, cv2
+import io, subprocess, numpy as np, cv2
 from PIL import Image
 from scipy import ndimage as ndi
-# caixa (x0,y0,x1,y1) na imagem grande; a versão -sm usa a mesma caixa na escala 365/589
-BOX = (138, 584, 196, 646)
+ORIG_COMMIT = '934755f'
+BOX = (104, 562, 206, 672)
+LINE = ((148, 607), (128, 690))  # contorno do colete: ponto sob o cotovelo -> ponto da borda limpa embaixo  # x0,y0,x1,y1 na imagem grande; a -sm usa a escala 365/589
 for suf, scale in (('', 1.0), ('-sm', 365 / 589)):
     f = f'assets/img/bettiana-maos{suf}.webp'
-    im = np.array(Image.open(f).convert('RGBA'))
+    cur = np.array(Image.open(f).convert('RGBA'))
+    raw = subprocess.check_output(['git', 'show', f'{ORIG_COMMIT}:{f}'])
+    orig = np.array(Image.open(io.BytesIO(raw)).convert('RGBA'))
     x0, y0, x1, y1 = [int(round(v * scale)) for v in BOX]
-    a = im[:, :, 3].astype(np.float32)
-    region = np.zeros(a.shape, bool); region[y0:y1, x0:x1] = True
-    soft = region & (a < 250)
-    # silhueta limpa: contorno binário suavizado (sem franja irregular)
-    solid = (a >= 128)
-    solid = ndi.binary_opening(ndi.binary_closing(solid, iterations=2), iterations=1)
-    sm = cv2.GaussianBlur(solid.astype(np.float32), (0, 0), 0.9 * max(scale, .6)) * 255
-    newa = np.where(region & (a < 250), sm, a)
-    # cor: nos pixels semitransparentes, usa só a cor dos vizinhos opacos (sem o tom amarelo do fundo)
-    rgb = np.ascontiguousarray(im[:, :, :3])
-    out = cv2.inpaint(rgb, (soft & (newa > 0)).astype(np.uint8) * 255, 3, cv2.INPAINT_TELEA)
-    im[:, :, :3] = np.where((soft & (newa > 0))[:, :, None], out, im[:, :, :3])
-    im[:, :, 3] = np.clip(newa, 0, 255).astype(np.uint8)
-    Image.fromarray(im, 'RGBA').save(f, 'WEBP', quality=90, method=6, alpha_quality=100)
-    print(f, 'ok', (x0, y0, x1, y1))
+    reg = np.zeros(cur.shape[:2], bool); reg[y0:y1, x0:x1] = True
+    a = cur[:, :, 3]
+    rgb = orig[:, :, :3].astype(int)
+    bright = rgb.mean(axis=2); sat = rgb.max(axis=2) - rgb.min(axis=2)
+    vest = (bright > 178) & (sat < 45)          # cor de colete clara (o fundo preenchido é cinza-escuro/marrom)
+    # só à direita da linha do contorno real do colete (do cotovelo até a borda limpa de baixo): evita pegar fundo claro
+    yy, xx = np.mgrid[0:cur.shape[0], 0:cur.shape[1]]
+    (lx0, ly0), (lx1, ly1) = [(v[0] * scale, v[1] * scale) for v in LINE]
+    edge_x = lx0 + (yy - ly0) * (lx1 - lx0) / (ly1 - ly0)
+    right_of_edge = xx >= edge_x - 0.5
+    cand = reg & (a < 250) & vest & right_of_edge
+    cand = ndi.binary_closing(cand, iterations=2) & reg & (a < 250)
+    cand = ndi.binary_opening(cand, iterations=1)
+    # fecha buracos pequenos que sobrem dentro do colete (pontinhas de fundo)
+    solid = cand | (a >= 250)
+    cand |= ndi.binary_fill_holes(solid) & ~solid & reg
+    # recupera a cor original e suaviza levemente (a cor sob a transparência vem em blocos)
+    sm = cv2.GaussianBlur(orig[:, :, :3], (0, 0), 1.2)
+    cur[:, :, :3] = np.where(cand[:, :, None], sm, cur[:, :, :3])
+    # silhueta suave: bordas com leve degradê em vez de serrilhado
+    alpha = np.where(cand, 255, a).astype(np.float32)
+    soft = cv2.GaussianBlur(alpha, (0, 0), 0.8 * max(scale, .6))
+    alpha = np.where(reg, np.maximum(alpha, soft * (a >= 0)), alpha)
+    cur[:, :, 3] = np.clip(alpha, 0, 255).astype(np.uint8)
+    Image.fromarray(cur, 'RGBA').save(f, 'WEBP', quality=90, method=6, alpha_quality=100)
+    print(f, 'pixels devolvidos ao colete:', int(cand.sum()))
