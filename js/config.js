@@ -14,11 +14,11 @@ export const CONFIG = {
      Deixe vazio ('') o que ainda não foi fornecido. Os botões continuam na página e mostram um aviso
      "link em configuração" ao serem clicados. Nada aqui é inventado. */
   links: {
-    /* WhatsApp: link direto (wa.me) com o número da Espanholarte, +55 22 99808-6723, com mensagem pré-preenchida
-       que diz que o contato veio do site (e de qual plano). Para voltar ao link do ChatWith (sem mensagem),
-       preencha whatsappUrl: 'https://chatwith.io/s/espanholarte' (ele tem prioridade sobre o número). */
-    whatsappUrl: '',
-    whatsappNumber: '5522998086723',
+    /* WhatsApp: link de atendimento informado pela cliente (ChatWith). Tem prioridade sobre o número abaixo
+       e é usado como está, sem mensagem pré-preenchida. Número só para conferência: +55 22 99808-6723. */
+    whatsappUrl: 'https://chatwith.io/s/espanholarte',
+    /* Alternativa: somente dígitos com DDI+DDD (só é usada se whatsappUrl estiver vazio). */
+    whatsappNumber: '',
     /* Instagram: handle visível nos materiais da cliente (@espanholarte). Confirmar o perfil final. */
     instagram: 'https://www.instagram.com/espanholarte/',
     /* Checkout do Espanhol para Viagens (Hotmart), link oficial fornecido pela cliente. */
@@ -37,7 +37,7 @@ export const CONFIG = {
     ]
   },
 
-  whatsappGreeting: 'Olá, Bettiana! Vi seu trabalho no site da Espanholarte.',
+  whatsappGreeting: 'Olá, Bettiana! Vim pelo site da Espanholarte.',
 
   /* ---------- OFERTAS (ordem = ordem na página) ---------- */
   offers: [
@@ -58,7 +58,7 @@ export const CONFIG = {
         '2 aulas de conversação por mês como bônus',
         'Certificado de conclusão'
       ],
-      cta: { type: 'whatsapp', label: 'Quero começar do zero', message: 'Olá, Bettiana! Vi o site da Espanholarte e quero saber mais sobre o Curso de Espanhol para Iniciantes (A1).' }
+      cta: { type: 'whatsapp', label: 'Quero começar do zero', message: 'Olá, Bettiana! Quero saber mais sobre o Curso de Espanhol para Iniciantes (A1).' }
     },
     {
       id: 'particular',
@@ -85,7 +85,7 @@ export const CONFIG = {
         'Acompanhamento próximo durante todo o processo',
         'Contrato de 3 ou 6 meses (opcional)'
       ],
-      cta: { type: 'whatsapp', label: 'Quero aulas personalizadas', message: 'Olá, Bettiana! Vi o site da Espanholarte e quero saber mais sobre as aulas particulares / em dupla.' }
+      cta: { type: 'whatsapp', label: 'Quero aulas personalizadas', message: 'Olá, Bettiana! Quero saber mais sobre as aulas particulares / em dupla.' }
     },
     {
       id: 'conversacao',
@@ -102,7 +102,7 @@ export const CONFIG = {
       details: ['Ambiente dinâmico, divertido e focado na fluência oral'],
       /* Horário do material atual. Conteúdo mutável: apague o texto para ocultar. */
       schedule: 'Horário atual da turma: sábados, 9h',
-      cta: { type: 'whatsapp', label: 'Quero destravar minha fala', message: 'Olá, Bettiana! Vi o site da Espanholarte e quero saber mais sobre as aulas de conversação.' }
+      cta: { type: 'whatsapp', label: 'Quero destravar minha fala', message: 'Olá, Bettiana! Quero saber mais sobre as aulas de conversação.' }
     },
     {
       id: 'viagens',
