@@ -3,7 +3,7 @@
    Nenhum dado pessoal é enviado (nunca data-msg, textos digitados, telefone ou e-mail).
    QA: abra a página com ?ga_debug=1 para os eventos aparecerem no DebugView do GA4. */
 (function () {
-  var ID = 'G-XXXXXXXXXX'; /* Measurement ID da propriedade "Site Espanholarte" */
+  var ID = 'G-0Y7YEJRGSL'; /* Measurement ID da propriedade "Site Espanholarte" */
   if (window.__espanholarteGA) return; /* garante uma única instalação/listener */
   window.__espanholarteGA = true;
   if (!/^G-[A-Z0-9]{6,}$/.test(ID) || ID === 'G-XXXXXXXXXX') return; /* sem ID válido: não faz nada */
